@@ -1,0 +1,24 @@
+name: Build .exe on Windows
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-win:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+      - name: Configure & build
+        run: |
+          cmake -S . -B build -A x64
+          cmake --build build --config Release
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: RentApp.exe
+          path: build/Release/RentApp.exe
